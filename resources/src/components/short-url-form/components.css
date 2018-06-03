@@ -1,9 +1,17 @@
 .short-form {
-  margin-bottom: 20%;
+  padding-top: 30px;
 }
 
 .short-form__btn {
   width: 100%;
   max-width: 200px;
+}
 
+.short-form__errors {
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.short-form__errors.show {
+  opacity: 1;
 }
