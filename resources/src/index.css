@@ -1,5 +1,18 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+html,
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+  height: 100%;
+}
+
+.btn-purple {
+  color: #fff;
+  background-color: var(--purple);
+  border-color: var(--purple);
+}
+
+.btn-purple:hover {
+  color: #fff;
+  background-color: #643ab0;
+  border-color: #643ab0;
 }
