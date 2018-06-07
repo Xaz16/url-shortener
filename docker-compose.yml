@@ -17,4 +17,4 @@ services:
       MYSQL_USER: url_short_u
       MYSQL_PASSWORD: W2Z32vOc11
       MYSQL_ROOT_PASSWORD: 10aTNCWRU005
-      MYSQL_DATABASE: url_short
+      MYSQL_DATABASE: url_shortener
