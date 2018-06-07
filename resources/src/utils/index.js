@@ -5,7 +5,7 @@
  */
 
 export const required = (val) => {
-  return val && val.trim();
+  return val && val.trim() && val.length;
 };
 
 /**
