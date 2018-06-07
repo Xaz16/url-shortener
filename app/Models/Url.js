@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
-const Model = use('Model')
+const Model = use('Model');
 
 class Url extends Model {
 }
 
-module.exports = Url
+module.exports = Url;
