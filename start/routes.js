@@ -14,11 +14,8 @@
 */
 
 const Route = use('Route');
-const Helpers = use('Helpers');
 
-Route.get('/checkShortUrl', 'UrlController.checkShortUrl');
+Route.get('/createUrlPair', 'UrlController.createUrlPair');
 Route.get('/checkUrl', 'UrlController.checkUrl');
 
-Route.any('*', ({response}) => {
-  response.sendFile(Helpers.publicPath('index.html'));
-});
+Route.any('*', 'MainController.index');
