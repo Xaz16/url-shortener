@@ -8,7 +8,7 @@ class UrlSchema extends Schema {
       table.increments();
       table.string('original').unique();
       table.string('short');
-      table.integer('usage');
+      table.integer('usage').notNull().defaultTo(0);
       table.timestamps();
     });
   }
