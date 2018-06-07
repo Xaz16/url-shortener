@@ -1,26 +1,46 @@
-import React, { Component }                      from 'react';
-import { connect }                               from 'react-redux';
-import { Form, Control, Errors }                 from 'react-redux-form';
-import { isUrl, required }                       from '../../utils';
-import { checkServerResponse, checkIfAvailable } from '../../utils/api';
+import React, { Component }                from 'react';
+import { connect }                         from 'react-redux';
+import { Form, Control, Errors }           from 'react-redux-form';
+import { isUrl, required }                 from '../../utils';
+import { createUrlPair, checkIfAvailable } from '../../utils/api';
+import { actions }                         from 'react-redux-form';
 import './components.css';
 
 class shortUrlForm extends Component {
   currentDomain = process.env.REACT_APP_CURRENT_DOMAIN;
+  state = {
+    success: false,
+    shortUrl: '',
+    originalUrl: ''
+  };
 
   submitHandle = ({original_url, desired_url}) => {
+    const {dispatch} = this.props;
     /**
      * We still can't use async and sync validators together due to
      * https://github.com/davidkpiano/react-redux-form/issues/1013
      * So we should check availability of url after submitting
      */
-
-    checkServerResponse(original_url, null).then(res => {});
+    if (!desired_url) {
+      createUrlPair(original_url, null)
+        .then(res => {
+          this.setState({
+            originalUrl: res.data.originalUrl,
+            success: res.status === 200,
+            shortUrl: res.data.shortUrl
+          });
+        })
+        .catch((err) => {
+          dispatch(actions.setValidity('mainForm.original_url', {
+            statusOk: false
+          }));
+        });
+    }
   };
 
 
   render() {
-    const errorVisibilityClass = this.props.form.$form.submitFailed && !this.props.form.$form.valid ? 'show' : '';
+    const errorVisibilityClass = (this.props.form.$form.submitFailed && !this.props.form.$form.valid) && (!this.state.success) ? 'show' : '';
     return (
       <React.Fragment>
         <div className="container">
@@ -29,6 +49,15 @@ class shortUrlForm extends Component {
                   onSubmit={submittedValues => this.submitHandle(submittedValues)}
             >
               <div className="short-form__errors-wrapper">
+                <div className={`alert alert-success`} hidden={!this.state.success}>
+                  {
+                    this.state.success ?
+                      <div>
+                        Original Url: {this.state.originalUrl} <br/>
+                        Short Url: {this.state.shortUrl}
+                      </div> : ''
+                  }
+                </div>
                 <div className={`alert alert-danger short-form__errors ${errorVisibilityClass}`} role="alert">
                   <Errors
                     model="mainForm.original_url"
@@ -57,7 +86,7 @@ class shortUrlForm extends Component {
                               validators={{
                                 isUrl, required
                               }}
-                              />
+                />
               </div>
               <div className="input-group mb-4">
                 <label htmlFor="original_url" className="d-block w-100">Desired Url (optional)</label>
