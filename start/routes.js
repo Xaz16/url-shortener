@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,12 @@
 |
 */
 
-const Route = use('Route')
+const Route = use('Route');
+const Helpers = use('Helpers');
 
-Route.on('/').render('welcome')
+Route.get('/checkShortUrl', 'UrlController.checkShortUrl');
+Route.get('/checkUrl', 'UrlController.checkUrl');
+
+Route.any('*', ({response}) => {
+  response.sendFile(Helpers.publicPath('index.html'));
+});

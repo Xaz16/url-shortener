@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./:/var/www/
+    links:
+      - "mysql:db"
+    ports:
+      - "8080:80"
+  mysql:
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: url_short_u
+      MYSQL_PASSWORD: W2Z32vOc11
+      MYSQL_ROOT_PASSWORD: 10aTNCWRU005
+      MYSQL_DATABASE: url_short
