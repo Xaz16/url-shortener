@@ -15,8 +15,56 @@ body {
   border-color: var(--purple);
 }
 
-.btn-purple:hover {
+.btn-purple:not(:disabled):hover {
   color: #fff;
   background-color: #643ab0;
   border-color: #643ab0;
+}
+
+.loader__wrapper {
+  position: absolute;
+  width: 100%;
+  background-color: rgba(255,255,255, .5);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  height: 100%;
+  z-index: -1;
+}
+
+.loader__wrapper.show {
+  opacity: 1;
+  z-index: 999;
+}
+
+.loader {
+  width: 56px;
+  height: 56px;
+  border: 2px solid rgba(100, 58, 176, .5);;
+  border-radius: 50%;
+  position: relative;
+  animation: loader-rotate 1s ease-in-out infinite;
+  top: 50%;
+  margin: -28px auto 0 auto;
+}
+
+.loader:after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0052ec;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -5px;
+}
+
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

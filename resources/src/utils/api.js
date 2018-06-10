@@ -1,17 +1,21 @@
-import axios               from 'axios';
-import { isUrl, required } from './index';
+import axios                          from 'axios';
+import { getCookie, isUrl, required } from './index';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3333';
-
+const CSRF = getCookie('XSRF-TOKEN');
 const instance = axios.create({
   baseURL: API_URL,
-  timeout: 30000
+  timeout: 30000,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-XSRF-TOKEN': CSRF ? CSRF : ''
+  }
 });
 
 /**
  *
- * @param value
- * @param done
+ * @param value {String}
+ * @param done {Function}
  * @returns {Promise}
  */
 
@@ -31,19 +35,16 @@ export const checkIfAvailable = (value, done) => {
 
 /**
  * Check if url return 200 or ok status
- * @param value
- * @param done
+ * @param data {Object}
+ * @param done {Function}
  * @returns {Promise}
  */
 
-export const createUrlPair = (value, done) => {
-  if (isUrl(value)) {
-    return instance.get('/createUrlPair?url=' + value).then(res => {
+export const createUrlPair = (data, done) => {
+  if (isUrl(data.original_url)) {
+    return instance.post('/createUrlPair', data).then(res => {
       done && done(res.data.available);
       return res;
-    }).catch(err => {
-      done && done(false);
-      return err;
-    });
+    })
   }
 };

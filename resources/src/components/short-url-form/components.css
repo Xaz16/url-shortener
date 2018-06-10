@@ -7,15 +7,30 @@
   max-width: 200px;
 }
 
-.short-form__errors-wrapper {
-  min-height: 96px;
+.short-form__info-wrapper {
+  min-height: 120px;
 }
 
-.short-form__errors {
+.short-form__actions {
+  position: relative;
+}
+
+.short-form__errors,
+.short-form__success {
   opacity: 0;
   transition: opacity 300ms ease;
+  height: 0;
 }
 
-.short-form__errors.show {
+.short-form__errors.show,
+.short-form__success.show {
   opacity: 1;
+  height: auto;
+}
+
+.short-form__short-url-input {
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
 }

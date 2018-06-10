@@ -13,7 +13,7 @@ database/development.sqlite
 .idea/
 
 # Public files
-public/index.html
+public/main.html
 public/service-worker.js
 public/favicon.ico
 public/asset-manifest.json
