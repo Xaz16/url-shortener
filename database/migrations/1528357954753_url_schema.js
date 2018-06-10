@@ -6,8 +6,8 @@ class UrlSchema extends Schema {
   up() {
     this.create('urls', (table) => {
       table.increments();
-      table.string('original').unique();
-      table.string('short');
+      table.string('original');
+      table.string('short').unique();
       table.integer('usage').notNull().defaultTo(0);
       table.timestamps();
     });

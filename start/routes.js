@@ -14,8 +14,15 @@
 */
 
 const Route = use('Route');
+const Env = use('Env');
 
-Route.get('/createUrlPair', 'UrlController.createUrlPair');
-Route.get('/checkUrl', 'UrlController.checkUrl');
+Route.post('/createUrlPair', 'UrlController.createUrlPair').validator('MainForm');
+Route.get('/checkShortUrl', 'UrlController.checkUrl');
+
+Route
+  .group(() => {
+    Route.post('/createUrlPair', 'ApiV1Controller.createUrlPair')
+  })
+  .prefix('api/v1');
 
 Route.any('*', 'MainController.index');

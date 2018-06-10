@@ -1,4 +1,6 @@
-'use strict'
+'use strict';
+
+const Env = use('Env');
 
 module.exports = {
   /*
@@ -27,8 +29,7 @@ module.exports = {
     | }
     |
     */
-    directives: {
-    },
+    directives: {},
     /*
     |--------------------------------------------------------------------------
     | Report only
@@ -132,14 +133,14 @@ module.exports = {
   |
   */
   csrf: {
-    enable: true,
+    enable: Env.get('HOST') !== '127.0.0.1',
     methods: ['POST', 'PUT', 'DELETE'],
-    filterUris: [],
+    filterUris: ['/api/v1'],
     cookieOptions: {
       httpOnly: false,
-      sameSite: true,
+      sameSite: false,
       path: '/',
       maxAge: 7200
     }
   }
-}
+};
