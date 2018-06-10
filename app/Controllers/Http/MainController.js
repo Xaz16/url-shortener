@@ -1,6 +1,7 @@
 'use strict';
 
 const Helpers = use('Helpers');
+const Logger = use('Logger');
 const Url = use('App/Models/Url');
 const Env = use('Env');
 const fs = require('fs');
@@ -15,12 +16,14 @@ class MainController {
         .where('short', '=', `${Env.get('APP_URL')}${url}`)
         .limit(1);
 
-      if(result) {
+      if(result.length) {
         const entry = await Url.findBy('id', result[0].id);
         entry.usage += 1;
         await entry.save();
         return response.redirect(result[0].original);
       }
+
+      return Logger.notice('Can\'t get %s', url)
     }
     response.header('Content-type', 'text/html');
     return response.send(fs.readFileSync(Helpers.publicPath('main.html'), 'utf-8'));

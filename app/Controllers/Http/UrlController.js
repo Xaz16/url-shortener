@@ -4,6 +4,7 @@ const axios = require('axios');
 const Utils = require('../../Services/Utils');
 const Url = use('App/Models/Url');
 const Env = use('Env');
+const Logger = use('Logger');
 
 class UrlController {
   constructor() {
@@ -14,22 +15,43 @@ class UrlController {
   }
 
   async createUrlPair({request, response}) {
-    const requestedUrl = request.input('url');
+    const requestedUrl = request.input('original_url');
+    const desiredUrl = request.input('desired_url').replace(/ /g, '');
+
     try {
-      const res = await axios.get(requestedUrl);
-      if (res.status === 200) {
-        const existingUrl = await this.checkExistingUrl({url: requestedUrl, type: 'original'});
-        if(!existingUrl) {
-          const result = await this.createShortUrl(requestedUrl);
-          return response.status(200).send({shortUrl: result, originalUrl: requestedUrl});
+        const res = await axios.get(requestedUrl).catch(err => {
+          Logger.warning('Can\'t get %s \n Error: %s', requestedUrl, err.message);
+        });
+        if (res.status >= 200 && res.status < 300) {
+          const existingUrl = await this.checkExistingUrl({url: requestedUrl, type: 'original'});
+          if(!existingUrl || desiredUrl) {
+            const result = await this.createShortUrl({requestedUrl, desiredUrl});
+            return response.status(200).send({shortUrl: result, originalUrl: requestedUrl});
+          }
+          return response.status(200).send({shortUrl: existingUrl[0].short, originalUrl: existingUrl[0].original});
         }
-        return response.status(200).send({shortUrl: existingUrl.short, originalUrl: existingUrl.original});
-      }
     } catch (err) {
-      console.error(err);
+      Logger.error('Error occurred: ' + err.message);
       return response.status(400).send('Error occurred: ' + err.message);
     }
   };
+
+  async checkUrl({request, response}) {
+    try {
+      const requestedUrl = request.input('url');
+      console.log(requestedUrl);
+      let result = await this.checkExistingUrl({url: requestedUrl, type: 'short'});
+
+      if(!result) {
+        return response.status(200).send({available: true});
+      }
+    } catch(err) {
+      Logger.error('Can\'t check short url: %s' + err.message)
+    } finally {
+      response.status(400).send({available: false});
+    }
+
+  }
 
   /**
    * Check url in database and return row if founded
@@ -43,7 +65,7 @@ class UrlController {
       case 'short':
         result = await Url
           .query()
-          .where('short', '=', `${Env.get('APP_URL')}${url}`)
+          .where('short', '=', `${Env.get('APP_URL')}/${url}`)
           .limit(1);
         break;
       case 'original':
@@ -54,17 +76,17 @@ class UrlController {
         break;
     }
 
-
     return result.length ? result : null;
   }
 
   /**
    * Create short url with recursion if created short url is duplicate
-   * @param requestedUrl
+   * @param requestedUrl {String}
+   * @param desiredUrl {String}
    * @returns {Promise<string>}
    */
-  async createShortUrl(requestedUrl) {
-    const result = `${Env.get('APP_URL')}/${this.utils.generateRandomString(6)}`;
+  async createShortUrl({requestedUrl, desiredUrl}) {
+    const result = `${Env.get('APP_URL')}/${desiredUrl ? desiredUrl : this.utils.generateRandomString(6)}`;
     const isDuplicate = await this.checkExistingUrl({url: result, type: 'short'}) !== null;
     if(isDuplicate) {
       this.createShortUrl.call(this, ...arguments)
