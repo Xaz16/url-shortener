@@ -19,11 +19,18 @@ Set you variables in .env
 cp .env.example .env
 ```
 
+Create tmp dear for logs
+```bash
+mkdir tmp
+```
+
 Run migrations 
 
 ```bash
 node ace migration:run
 ```
+
+Edit and run `cron.sh`. It will run command for auto clear old entries of urls
 
 ### Run tests
 
