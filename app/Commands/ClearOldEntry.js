@@ -2,7 +2,7 @@
 
 const {Command} = require('@adonisjs/ace');
 const Database = use('Database');
-
+const Logger = use('Logger')
 class ClearOldEntry extends Command {
   static get signature() {
     return 'clear:old:entry';
@@ -27,6 +27,9 @@ class ClearOldEntry extends Command {
       .delete();
 
     Database.close();
+
+    Logger.info('ClearOldEntry finished. \n Entries with these ids are cleared: %s', JSON.stringify(shouldBeDeleted))
+
   }
 }
 
