@@ -14,15 +14,14 @@ class ApiV1Controller {
   async createUrlPair({request, response}) {
     try {
       const validate = await validateAll(request.all(), this.mainValidator.rules, this.mainValidator.messages);
-
       if (!validate.fails()) {
         return await this.urlController.createUrlPair({request, response});
       } else {
         return await response.status(403).send(validate.messages());
       }
     } catch(err) {
-      Logger.error('Error on POST %s edpoint \n Message: %s', request.url(), err.message);
-      return await response.status(400).send(err);
+      Logger.error('Error on POST %s endpoint \n Message: %s', request.url(), err.message);
+      return await response.status(400).send(err.message);
     }
 
   }

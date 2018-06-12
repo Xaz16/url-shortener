@@ -1,5 +1,5 @@
 class Utils {
-  generateRandomString(threshold) {
+  generateRandomString(threshold = 6) {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < threshold; i++) {

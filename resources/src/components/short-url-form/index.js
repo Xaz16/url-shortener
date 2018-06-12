@@ -71,6 +71,7 @@ class shortUrlForm extends Component {
                     Short Url:
                     <input className="short-form__short-url-input" readOnly={true}
                            ref={node => this.shortUrlInput = node}
+                           name="short-url__input-value"
                            onClick={() => this.shortUrlInput.setSelectionRange(0, this.shortUrlInput.value.length)}
                            value={this.state.shortUrl}/>
                   </div>
