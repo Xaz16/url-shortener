@@ -7,6 +7,11 @@ Install all dependencies
 npm i && cd resources/ && npm i
 ```
 
+Set you variables in .env
+```bash
+cp .env.example .env
+```
+
 Build front end part
 ```bash
 cd resources/ && npm run build
