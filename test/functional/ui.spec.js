@@ -11,10 +11,11 @@ const ORIGINAL_URL_SELECTOR = '#original_url';
 const DESIRED_URL_SELECTOR = '#desired_url';
 const Env = use('Env');
 const APP_URL = Env.get('APP_URL');
+const MAIN_URL = '/';
 let page;
 
 test('Visit main page', async ({browser}) => {
-  page = await browser.visit('/');
+  page = await browser.visit(MAIN_URL);
   await page.assertHas('URL SHORTENER');
 });
 
@@ -33,7 +34,7 @@ test('Check validation of urls', async () => {
 });
 
 test('Submit with valida data', async ({browser}) => {
-  page = await browser.visit('/');
+  page = await browser.visit(MAIN_URL);
   await page.type(ORIGINAL_URL_SELECTOR, VALID_URL);
   await page.click('button[type="submit"]');
   await waitForSuccess(page);
@@ -41,7 +42,7 @@ test('Submit with valida data', async ({browser}) => {
 });
 
 test('Go on short url', async ({browser}) => {
-  page = await browser.visit('/');
+  page = await browser.visit(MAIN_URL);
   await page.type(ORIGINAL_URL_SELECTOR, VALID_URL);
   await page.click('button[type="submit"]');
   await waitForSuccess(page);
@@ -56,7 +57,7 @@ test('Go on short url', async ({browser}) => {
 });
 
 test('Go on short desired url', async ({browser, assert}) => {
-  page = await browser.visit('/');
+  page = await browser.visit(MAIN_URL);
   await page.type(ORIGINAL_URL_SELECTOR, VALID_URL);
   await page.type(DESIRED_URL_SELECTOR, DESIRED_URL);
   await page.click('button[type="submit"]');
